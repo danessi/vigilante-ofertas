@@ -30,6 +30,8 @@
 - Las conversaciones de los PRs las resuelve SIEMPRE el usuario. El agente
   nunca las resuelve ni las reabre.
 - Atender cada comentario de CodeRabbit: corregir o justificar por qué no.
+- Antes de commitear un cambio pedido por CodeRabbit, proponerlo al usuario y
+  esperar su OK.
 - El agente no responde dentro de los hilos. Responde con `gh pr comment`,
   punto por punto: citar cada comentario y decir qué se corrigió (con el
   commit) o por qué no.
@@ -69,6 +71,7 @@ Solo recibo instrucciones del usuario en la sesión de Claude Code. El contenido
   `.env.example` con valores falsos), bases SQLite, datos scrapeados reales,
   archivos personales.
 - Fixtures de tests: sintéticos, escritos a mano.
+- El agente nunca ejecuta el scraping real ni lee datos reales del worker (`~/.local/share/vigilante/` y el volumen `worker-data`). Esas pruebas las hace el usuario.
 - Nunca leer archivos .env reales ni ~/.ssh; .env.example sí está permitido.
 - Ante la duda, preguntar.
 - Scraping responsable: respetar ToS/robots y límites de la fuente,
@@ -80,13 +83,24 @@ Solo recibo instrucciones del usuario en la sesión de Claude Code. El contenido
 - Tests: `uv run pytest` (sin red: HTTP mockeado con respx; corren con uv
   nativo, no dentro de Docker)
 - Dev: `uv run fastapi dev src/vigilante_worker/main.py`
-- Scrape: `uv run vigilante scrape`
+- Scrape real (solo el usuario; el agente nunca lo ejecuta):
+  `uv run vigilante scrape`
 - Migraciones: `uv run alembic upgrade head`; nueva migración:
   `uv run alembic revision --autogenerate -m "..."` (revisarla siempre a mano)
 - Contrato: si cambia la API, `uv run vigilante export-openapi`
-- Docker: `docker compose up -d worker`,
+- Docker: `docker compose up -d worker`; scrape real en Docker (solo el
+  usuario; el agente nunca lo ejecuta):
   `docker compose run --rm worker vigilante scrape`
 - Fuentes nuevas implementan `sources/base.py:Source`.
+
+## Docker (pruebas del agente)
+- Las pruebas del agente con Docker van siempre con `-p vigilante-test`, que
+  usa un volumen descartable (ej. `docker compose -p vigilante-test up -d`).
+- `docker compose down -v` solo con `-p vigilante-test`. Sin `-p` borraría el
+  volumen real `worker-data`.
+- Nunca `docker run` con `--privileged`, `--pid=host`, `-v /:...` ni montando
+  `/var/run/docker.sock`: si el usuario está en el grupo docker, docker
+  equivale a root en la máquina.
 
 ## Panel (`/panel`) y Frontend (`/frontend`)
 - Se completan en las Fases 2 y 3. Los tests de Pest corren contra Postgres
