@@ -1,16 +1,14 @@
 # --- Secretos y configuración local ---
-.env
-.env.*
+.env*
 !.env.example
 *.pem
 *.key
 
 # --- Datos (nunca se commitean datos scrapeados) ---
-*.sqlite
-*.sqlite3
-*.sqlite-*
-*.sqlite3-*
+# *.sqlite* cubre .sqlite, .sqlite3, sidecars (-wal, -shm, -journal) y copias (.bak)
+*.sqlite*
 *.db
+*.db-*
 data/
 
 # --- Python (worker) ---

@@ -21,8 +21,8 @@ worker (FastAPI + SQLite)           ← scraping, normalización, deduplicación
 ```
 
 - El frontend **nunca** llama al worker directamente.
-- Cada servicio tiene su Dockerfile y su job de CI; `docker-compose.yml` en la
-  raíz los une.
+- Cada servicio va a tener su Dockerfile y su job de CI, y un
+  `docker-compose.yml` en la raíz los va a unir.
 
 | Carpeta | Servicio | Estado |
 |---|---|---|
