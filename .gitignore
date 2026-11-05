@@ -1,0 +1,46 @@
+# --- Secretos y configuración local ---
+.env*
+!.env.example
+*.pem
+*.key
+
+# --- Datos (nunca se commitean datos scrapeados) ---
+# *.sqlite* cubre .sqlite, .sqlite3, sidecars (-wal, -shm, -journal) y copias (.bak)
+*.sqlite*
+*.db
+*.db-*
+data/
+
+# --- Python (worker) ---
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# --- PHP / Laravel (panel) ---
+vendor/
+.phpunit.result.cache
+.phpunit.cache/
+
+# --- Node / React (frontend) ---
+node_modules/
+dist/
+playwright-report/
+test-results/
+blob-report/
+
+# --- Editores y sistema ---
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Claude Code (configuración local de cada persona) ---
+.claude/settings.local.json
